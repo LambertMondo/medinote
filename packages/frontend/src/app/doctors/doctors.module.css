@@ -77,6 +77,17 @@
   gap: var(--space-md);
 }
 
+.skeletonLine {
+  height: 20px;
+  width: 60%;
+}
+
+.skeletonLineShort {
+  height: 16px;
+  width: 40%;
+  margin-top: 8px;
+}
+
 @media (max-width: 768px) {
   .filters {
     grid-template-columns: 1fr;

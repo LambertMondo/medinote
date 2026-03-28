@@ -92,6 +92,7 @@ export default function DoctorsPage() {
           }
         />
         <select
+          aria-label="Filtrer par spécialité"
           className="input"
           value={filters.specialtyId}
           onChange={(e) =>
@@ -106,6 +107,7 @@ export default function DoctorsPage() {
           ))}
         </select>
         <select
+          aria-label="Filtrer par établissement"
           className="input"
           value={filters.hospitalId}
           onChange={(e) =>
@@ -127,8 +129,8 @@ export default function DoctorsPage() {
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className={`card ${styles.doctorCard}`}>
               <div className={`skeleton ${styles.avatarSkeleton}`} />
-              <div className="skeleton" style={{ height: 20, width: "60%" }} />
-              <div className="skeleton" style={{ height: 16, width: "40%", marginTop: 8 }} />
+              <div className={`skeleton ${styles.skeletonLine}`} />
+              <div className={`skeleton ${styles.skeletonLineShort}`} />
             </div>
           ))}
         </div>
