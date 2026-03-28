@@ -51,7 +51,7 @@ docker compose -f docker-compose.dev.yml up --build
 
 # 4. Seed (données de test)
 cd packages/backend
-npx ts-node ../../scripts/seed.ts
+npm run seed
 ```
 
 ### Comptes de test
