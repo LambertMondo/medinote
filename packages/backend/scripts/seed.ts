@@ -17,7 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
  */
 
 const DATABASE_URL =
-  process.env.DATABASE_URL || 'postgresql://medinote:medinote@localhost:5432/medinote';
+  process.env.DATABASE_URL || 'postgresql://medinote:medinote_dev@localhost:5432/medinote';
 
 async function seed() {
   const ds = new DataSource({
@@ -210,8 +210,7 @@ async function seed() {
 
         await queryRunner.query(
           `INSERT INTO slots (id, doctor_id, start_at, end_at, status, version)
-           VALUES ($1, $2, $3, $4, 'available', 1)
-           ON CONFLICT (doctor_id, start_at) DO NOTHING`,
+           VALUES ($1, $2, $3, $4, 'available', 1)`,
           [uuidv4(), doctorId, startAt.toISOString(), endAt.toISOString()],
         );
         slotCount++;

@@ -28,14 +28,14 @@ export class DoctorsService {
       .leftJoinAndSelect('d.user', 'u')
       .leftJoinAndSelect('d.specialty', 's')
       .leftJoinAndSelect('d.hospital', 'h')
-      .where('d.is_active = :active', { active: true });
+      .where('d.isActive = :active', { active: true });
 
     if (filters.specialtyId) {
-      qb.andWhere('d.specialty_id = :sid', { sid: filters.specialtyId });
+      qb.andWhere('d.specialtyId = :sid', { sid: filters.specialtyId });
     }
 
     if (filters.hospitalId) {
-      qb.andWhere('d.hospital_id = :hid', { hid: filters.hospitalId });
+      qb.andWhere('d.hospitalId = :hid', { hid: filters.hospitalId });
     }
 
     if (filters.city) {
@@ -44,12 +44,12 @@ export class DoctorsService {
 
     if (filters.search) {
       qb.andWhere(
-        '(LOWER(u.first_name) LIKE :search OR LOWER(u.last_name) LIKE :search OR LOWER(s.name) LIKE :search)',
+        '(LOWER(u.firstName) LIKE :search OR LOWER(u.lastName) LIKE :search OR LOWER(s.name) LIKE :search)',
         { search: `%${filters.search.toLowerCase()}%` },
       );
     }
 
-    qb.orderBy('u.last_name', 'ASC')
+    qb.orderBy('u.lastName', 'ASC')
       .skip((page - 1) * limit)
       .take(limit);
 
