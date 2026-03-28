@@ -107,9 +107,10 @@ export class AuthService {
   }
 
   private async generateTokens(payload: JwtPayload) {
-    const accessToken = this.jwtService.sign(payload, {
-      expiresIn: this.config.get<string>('jwt.expiration'),
-    });
+    const accessToken = this.jwtService.sign(
+      { ...payload },
+      { expiresIn: (this.config.get<string>('jwt.expiration') || '15m') as any },
+    );
 
     const refreshTokenRaw = uuidv4();
     const refreshTokenHash = await argon2.hash(refreshTokenRaw, {
