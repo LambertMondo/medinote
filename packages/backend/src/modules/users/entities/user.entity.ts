@@ -4,7 +4,6 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne,
 } from 'typeorm';
 
 export enum UserRole {

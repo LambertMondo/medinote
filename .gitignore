@@ -30,3 +30,4 @@ redisdata/
 # Coverage
 coverage/
 mon-prompt.txt
+node_modules/

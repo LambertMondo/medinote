@@ -1,0 +1,50 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.appointmentCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.cardHeader h3 {
+  font-size: var(--text-base);
+  font-weight: 700;
+  margin-bottom: var(--space-xs);
+}
+
+.cardDetails {
+  display: flex;
+  gap: var(--space-xl);
+}
+
+.detail {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.empty {
+  text-align: center;
+  padding: var(--space-3xl);
+  color: var(--color-text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
