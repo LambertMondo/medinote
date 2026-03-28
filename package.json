@@ -1,0 +1,28 @@
+{
+  "name": "medinote",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PWA de prise de rendez-vous médicaux",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "docker compose -f docker-compose.dev.yml up --build",
+    "dev:backend": "npm run dev --workspace=packages/backend",
+    "dev:frontend": "npm run dev --workspace=packages/frontend",
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces",
+    "format": "prettier --write \"packages/**/*.{ts,tsx,json,css,md}\""
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^7.0.11",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/uuid": "^10.0.0",
+    "nestjs-pino": "^4.6.1",
+    "prettier": "^3.2.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}

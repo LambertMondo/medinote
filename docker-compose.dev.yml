@@ -1,0 +1,102 @@
+services:
+  # ── PostgreSQL ──────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: medinote-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME:-medinote}
+      POSTGRES_USER: ${DB_USER:-medinote}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-medinote_dev}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-medinote}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ───────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: medinote-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Backend (NestJS) ────────────────────────────────
+  backend:
+    build:
+      context: ./packages/backend
+      target: development
+    container_name: medinote-backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://${DB_USER:-medinote}:${DB_PASSWORD:-medinote_dev}@postgres:5432/${DB_NAME:-medinote}
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:-dev_jwt_secret_change_in_production}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-15m}
+      JWT_REFRESH_EXPIRATION: ${JWT_REFRESH_EXPIRATION:-7d}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-noreply@medinote.local}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-dev_encryption_key_32_bytes_hex00}
+      BACKEND_PORT: 3001
+      FRONTEND_URL: http://localhost:3000
+    volumes:
+      - ./packages/backend/src:/app/src
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ── Frontend (Next.js) ──────────────────────────────
+  frontend:
+    build:
+      context: ./packages/frontend
+      target: development
+    container_name: medinote-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+    volumes:
+      - ./packages/frontend/src:/app/src
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+
+  # ── Nginx (Reverse Proxy) ──────────────────────────
+  nginx:
+    build:
+      context: ./nginx
+    container_name: medinote-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  pgdata:
+  redisdata:
